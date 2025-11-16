@@ -1,0 +1,41 @@
+[
+  {
+    "id": "route-1",
+    "name": "Route 1",
+    "region": "Unova",
+    "description": "Gentle grass with the starters and early companions.",
+    "encounters": [
+      { "pokemonId": "patrat", "rate": 40 },
+      { "pokemonId": "lillipup", "rate": 35 },
+      { "pokemonId": "snivy", "rate": 10 },
+      { "pokemonId": "tepig", "rate": 10 },
+      { "pokemonId": "oshawott", "rate": 5 }
+    ]
+  },
+  {
+    "id": "dreamyard",
+    "name": "Dreamyard",
+    "region": "Unova",
+    "description": "Overgrown ruins full of mischievous Pokemon.",
+    "encounters": [
+      { "pokemonId": "purrloin", "rate": 30 },
+      { "pokemonId": "pansear", "rate": 20 },
+      { "pokemonId": "pidove", "rate": 20 },
+      { "pokemonId": "audino", "rate": 15 },
+      { "pokemonId": "blitzle", "rate": 15 }
+    ]
+  },
+  {
+    "id": "pinwheel-forest",
+    "name": "Pinwheel Forest",
+    "region": "Unova",
+    "description": "Dense woods buzzing with life.",
+    "encounters": [
+      { "pokemonId": "sewaddle", "rate": 30 },
+      { "pokemonId": "venipede", "rate": 30 },
+      { "pokemonId": "snivy", "rate": 15 },
+      { "pokemonId": "oshawott", "rate": 15 },
+      { "pokemonId": "audino", "rate": 10 }
+    ]
+  }
+]
