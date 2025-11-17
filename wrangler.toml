@@ -1,0 +1,5 @@
+name = "gummisite"
+compatibility_date = "2025-11-17"
+
+[site]
+bucket = "./dist"
