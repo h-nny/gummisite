@@ -106,10 +106,10 @@ export default function GrassGrid({ rows = 5, cols = 5, location, onEncounter }:
                 </div>
               )}
               {state?.status === 'miss' && (
-                <div className="relative z-10 animate-shake">
+                <div className="relative z-10">
                   <div className="relative rounded-full bg-white px-3 py-2 shadow-lg">
-                    <span className="text-xl font-black text-gray-800">
-                      !
+                    <span className="text-sm font-black uppercase text-gray-800">
+                      Miss
                     </span>
                     <div className="absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-white" />
                   </div>
