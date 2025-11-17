@@ -36,6 +36,7 @@ function App() {
   const [shinyChance, setShinyChance] = useState(2)
   const [showWorldModal, setShowWorldModal] = useState(false)
   const [showLocationModal, setShowLocationModal] = useState(false)
+  const [editingLocation, setEditingLocation] = useState<Location | null>(null)
 
   const allLocations = useMemo(() => {
     if (selectedWorldId) {
@@ -80,13 +81,31 @@ function App() {
   }
 
   const handleLocationCreate = (location: Location) => {
-    if (selectedWorldId) {
-      const world = worlds.find((w) => w.id === selectedWorldId)
-      if (world) {
-        updateWorldLocations(selectedWorldId, [...world.locations, location])
+    if (editingLocation) {
+      // Update existing location
+      if (selectedWorldId) {
+        const world = worlds.find((w) => w.id === selectedWorldId)
+        if (world) {
+          updateWorldLocations(
+            selectedWorldId,
+            world.locations.map((loc) => (loc.id === editingLocation.id ? location : loc))
+          )
+        }
+      } else {
+        removeLocation(editingLocation.id)
+        addLocation(location)
       }
+      setEditingLocation(null)
     } else {
-      addLocation(location)
+      // Create new location
+      if (selectedWorldId) {
+        const world = worlds.find((w) => w.id === selectedWorldId)
+        if (world) {
+          updateWorldLocations(selectedWorldId, [...world.locations, location])
+        }
+      } else {
+        addLocation(location)
+      }
     }
     setSelectedLocationId(location.id)
     setShowLocationModal(false)
@@ -205,7 +224,14 @@ function App() {
               selectedLocation={activeLocation}
               onSelectLocation={(location) => setSelectedLocationId(location?.id ?? '')}
               onRemoveLocation={handleRemoveLocation}
-              onCreateNew={() => setShowLocationModal(true)}
+              onCreateNew={() => {
+                setEditingLocation(null)
+                setShowLocationModal(true)
+              }}
+              onEdit={(location) => {
+                setEditingLocation(location)
+                setShowLocationModal(true)
+              }}
             />
 
             <GridControls gridSize={gridSize} onChange={setGridSize} />
@@ -255,10 +281,10 @@ function App() {
             onClick={() => setShowWorldModal(false)}
           />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="relative w-full max-w-lg rounded-[32px] bg-white p-6 shadow-2xl">
+            <div className="relative w-full max-w-lg rounded-[32px] bg-white p-8 shadow-2xl">
               <button
                 onClick={() => setShowWorldModal(false)}
-                className="absolute top-4 right-4 rounded-full p-2 hover:bg-emerald-50"
+                className="absolute top-5 right-5 rounded-full p-2 hover:bg-emerald-50"
                 aria-label="Close modal"
               >
                 <svg className="h-5 w-5 text-emerald-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -266,6 +292,7 @@ function App() {
                 </svg>
               </button>
               <h3 className="mb-6 text-2xl font-black text-emerald-900">Create New World</h3>
+              <p className="mb-6 text-sm text-emerald-700">A world groups your custom routes and locations.</p>
               <WorldForm
                 onCreate={(world) => {
                   addWorld(world)
@@ -282,21 +309,30 @@ function App() {
         <>
           <div
             className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
-            onClick={() => setShowLocationModal(false)}
+            onClick={() => {
+              setShowLocationModal(false)
+              setEditingLocation(null)
+            }}
           />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[32px] bg-white p-6 shadow-2xl">
+            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[32px] bg-white p-8 shadow-2xl">
               <button
-                onClick={() => setShowLocationModal(false)}
-                className="absolute top-4 right-4 rounded-full p-2 hover:bg-emerald-50"
+                onClick={() => {
+                  setShowLocationModal(false)
+                  setEditingLocation(null)
+                }}
+                className="absolute top-5 right-5 rounded-full p-2 hover:bg-emerald-50"
                 aria-label="Close modal"
               >
                 <svg className="h-5 w-5 text-emerald-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-              <h3 className="mb-6 text-2xl font-black text-emerald-900">Create New Location</h3>
-              <CustomLocationForm onCreate={handleLocationCreate} />
+              <h3 className="mb-6 text-2xl font-black text-emerald-900">
+                {editingLocation ? 'Edit Location' : 'Create New Location'}
+              </h3>
+              <p className="mb-6 text-sm text-emerald-700">Pick Pokémon and encounter rates to build your {editingLocation ? 'location' : 'own hotspot'}.</p>
+              <CustomLocationForm onCreate={handleLocationCreate} initialLocation={editingLocation} />
             </div>
           </div>
         </>

@@ -27,12 +27,8 @@ export default function WorldForm({ onCreate }: WorldFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-[32px] border border-emerald-100 bg-white/90 p-5 shadow-sm"
+      className="space-y-4"
     >
-      <div className="mb-4">
-        <p className="text-sm font-bold uppercase tracking-wide text-emerald-500">Create a world</p>
-        <p className="text-xs text-emerald-900/70">A world groups your custom routes and locations.</p>
-      </div>
 
       <label className="block text-sm text-emerald-900">
         World Name

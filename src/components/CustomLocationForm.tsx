@@ -1,18 +1,29 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { defaultEncounterTable, pokemonList, EncounterEntry } from '../data/pokemon'
 import { buildLocation, Location } from '../utils/locations'
+import PokemonAutocomplete from './PokemonAutocomplete'
 
 interface CustomLocationFormProps {
   onCreate?: (location: Location) => void
+  initialLocation?: Location | null
 }
 
 const blankEncounter = (): EncounterEntry => ({ pokemonId: '', rate: 0 })
 
-export default function CustomLocationForm({ onCreate }: CustomLocationFormProps) {
+export default function CustomLocationForm({ onCreate, initialLocation }: CustomLocationFormProps) {
   const [name, setName] = useState('Sunlit Clearing')
   const [region, setRegion] = useState('Custom')
   const [description, setDescription] = useState('A peaceful patch of shimmering grass.')
   const [encounters, setEncounters] = useState<EncounterEntry[]>(defaultEncounterTable)
+
+  useEffect(() => {
+    if (initialLocation) {
+      setName(initialLocation.name)
+      setRegion(initialLocation.region)
+      setDescription(initialLocation.description)
+      setEncounters(initialLocation.encounters)
+    }
+  }, [initialLocation])
 
   const totalRate = useMemo(
     () => encounters.reduce((sum, entry) => sum + (Number(entry.rate) || 0), 0),
@@ -40,23 +51,27 @@ export default function CustomLocationForm({ onCreate }: CustomLocationFormProps
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const location = buildLocation({ name, region, description, encounters })
+    const location = buildLocation({ 
+      name, 
+      region, 
+      description, 
+      encounters,
+      id: initialLocation?.id
+    })
     onCreate?.(location)
-    setName('Sunlit Clearing')
-    setRegion('Custom')
-    setDescription('Another hidden patch of grass.')
-    setEncounters(defaultEncounterTable)
+    if (!initialLocation) {
+      setName('Sunlit Clearing')
+      setRegion('Custom')
+      setDescription('Another hidden patch of grass.')
+      setEncounters(defaultEncounterTable)
+    }
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-6 space-y-4 rounded-3xl border border-emerald-100 bg-white/90 p-5 shadow-sm"
+      className="space-y-4"
     >
-      <div>
-        <p className="text-sm font-bold uppercase tracking-wide text-emerald-500">Create a location</p>
-        <p className="text-xs text-emerald-900/70">Pick Pokémon and encounter rates to build your own hotspot.</p>
-      </div>
 
       <label className="block text-sm text-emerald-900">
         Name
@@ -102,19 +117,13 @@ export default function CustomLocationForm({ onCreate }: CustomLocationFormProps
         </div>
         {encounters.map((entry, index) => (
           <div key={index} className="flex gap-2">
-            <select
-              value={entry.pokemonId}
-              onChange={(event) => handleEncounterChange(index, 'pokemonId', event.target.value)}
-              className="flex-1 rounded-2xl border border-emerald-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
-              required
-            >
-              <option value="">Choose Pokémon</option>
-              {pokemonList.map((pokemon) => (
-                <option key={pokemon.id} value={pokemon.id}>
-                  {pokemon.name}
-                </option>
-              ))}
-            </select>
+            <div className="flex-1">
+              <PokemonAutocomplete
+                value={entry.pokemonId}
+                onChange={(pokemonId) => handleEncounterChange(index, 'pokemonId', pokemonId)}
+                required
+              />
+            </div>
             <input
               type="number"
               min="1"

@@ -6,6 +6,7 @@ interface LocationSelectorProps {
   onSelectLocation?: (location: Location | null) => void
   onRemoveLocation?: (locationId: string) => void
   onCreateNew?: () => void
+  onEdit?: (location: Location) => void
 }
 
 export default function LocationSelector({
@@ -14,6 +15,7 @@ export default function LocationSelector({
   onSelectLocation,
   onRemoveLocation,
   onCreateNew,
+  onEdit,
 }: LocationSelectorProps) {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value
@@ -52,13 +54,22 @@ export default function LocationSelector({
           <p className="font-semibold text-emerald-900">{selectedLocation.name}</p>
           <p>{selectedLocation.description}</p>
           {selectedLocation.isCustom && (
-            <button
-              type="button"
-              onClick={() => onRemoveLocation?.(selectedLocation.id)}
-              className="mt-3 text-xs font-semibold uppercase tracking-wide text-rose-600 hover:text-rose-500"
-            >
-              Remove custom location
-            </button>
+            <div className="mt-3 flex gap-3">
+              <button
+                type="button"
+                onClick={() => onEdit?.(selectedLocation)}
+                className="text-xs font-semibold uppercase tracking-wide text-blue-600 hover:text-blue-700"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => onRemoveLocation?.(selectedLocation.id)}
+                className="text-xs font-semibold uppercase tracking-wide text-rose-600 hover:text-rose-500"
+              >
+                Delete
+              </button>
+            </div>
           )}
         </div>
       )}
