@@ -5,6 +5,7 @@ interface LocationSelectorProps {
   selectedLocation: Location | null
   onSelectLocation?: (location: Location | null) => void
   onRemoveLocation?: (locationId: string) => void
+  onCreateNew?: () => void
 }
 
 export default function LocationSelector({
@@ -12,6 +13,7 @@ export default function LocationSelector({
   selectedLocation,
   onSelectLocation,
   onRemoveLocation,
+  onCreateNew,
 }: LocationSelectorProps) {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value
@@ -20,10 +22,16 @@ export default function LocationSelector({
   }
 
   return (
-    <div className="space-y-2">
-      <label className="text-sm font-semibold uppercase tracking-wide text-emerald-900">
-        Location
-      </label>
+    <div className="rounded-[32px] border border-emerald-100 bg-white/90 p-5">
+      <div className="mb-2 flex items-center justify-between">
+        <p className="text-sm font-semibold uppercase tracking-wide text-emerald-500">Location</p>
+        <button
+          onClick={onCreateNew}
+          className="text-xs font-semibold uppercase tracking-wide text-blue-600 hover:text-blue-700"
+        >
+          + New Location
+        </button>
+      </div>
       <select
         className="w-full rounded-2xl border border-emerald-200 bg-white px-4 py-3 text-emerald-900 shadow-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-200"
         value={selectedLocation?.id ?? ''}

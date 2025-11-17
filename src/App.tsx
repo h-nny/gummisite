@@ -34,6 +34,8 @@ function App() {
   const [lastEncounter, setLastEncounter] = useState<(EncounterResult & { locationName?: string }) | null>(null)
   const [sidePanelOpen, setSidePanelOpen] = useState(false)
   const [shinyChance, setShinyChance] = useState(2)
+  const [showWorldModal, setShowWorldModal] = useState(false)
+  const [showLocationModal, setShowLocationModal] = useState(false)
 
   const allLocations = useMemo(() => {
     if (selectedWorldId) {
@@ -87,6 +89,7 @@ function App() {
       addLocation(location)
     }
     setSelectedLocationId(location.id)
+    setShowLocationModal(false)
   }
 
   const handleRemoveLocation = (locationId: string) => {
@@ -158,7 +161,15 @@ function App() {
 
           <div className="space-y-6">
             <div className="rounded-[32px] border border-emerald-100 bg-white/90 p-5">
-              <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-500">Active World</p>
+              <div className="mb-2 flex items-center justify-between">
+                <p className="text-sm font-semibold uppercase tracking-wide text-emerald-500">Active World</p>
+                <button
+                  onClick={() => setShowWorldModal(true)}
+                  className="text-xs font-semibold uppercase tracking-wide text-emerald-600 hover:text-emerald-700"
+                >
+                  + New World
+                </button>
+              </div>
               <select
                 className="w-full rounded-2xl border border-emerald-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
                 value={selectedWorldId ?? ''}
@@ -189,13 +200,12 @@ function App() {
               )}
             </div>
 
-            <WorldForm onCreate={addWorld} />
-
             <LocationSelector
               locations={allLocations}
               selectedLocation={activeLocation}
               onSelectLocation={(location) => setSelectedLocationId(location?.id ?? '')}
               onRemoveLocation={handleRemoveLocation}
+              onCreateNew={() => setShowLocationModal(true)}
             />
 
             <GridControls gridSize={gridSize} onChange={setGridSize} />
@@ -225,8 +235,6 @@ function App() {
               </p>
               <EncounterSummary encounters={activeLocation?.encounters ?? []} />
             </div>
-
-            <CustomLocationForm onCreate={handleLocationCreate} />
           </div>
         </div>
       </div>
@@ -237,6 +245,61 @@ function App() {
           className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm"
           onClick={() => setSidePanelOpen(false)}
         />
+      )}
+
+      {/* World Modal */}
+      {showWorldModal && (
+        <>
+          <div
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowWorldModal(false)}
+          />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="relative w-full max-w-lg rounded-[32px] bg-white p-6 shadow-2xl">
+              <button
+                onClick={() => setShowWorldModal(false)}
+                className="absolute top-4 right-4 rounded-full p-2 hover:bg-emerald-50"
+                aria-label="Close modal"
+              >
+                <svg className="h-5 w-5 text-emerald-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <h3 className="mb-6 text-2xl font-black text-emerald-900">Create New World</h3>
+              <WorldForm
+                onCreate={(world) => {
+                  addWorld(world)
+                  setShowWorldModal(false)
+                }}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Location Modal */}
+      {showLocationModal && (
+        <>
+          <div
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowLocationModal(false)}
+          />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[32px] bg-white p-6 shadow-2xl">
+              <button
+                onClick={() => setShowLocationModal(false)}
+                className="absolute top-4 right-4 rounded-full p-2 hover:bg-emerald-50"
+                aria-label="Close modal"
+              >
+                <svg className="h-5 w-5 text-emerald-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <h3 className="mb-6 text-2xl font-black text-emerald-900">Create New Location</h3>
+              <CustomLocationForm onCreate={handleLocationCreate} />
+            </div>
+          </div>
+        </>
       )}
 
       <GrassGrid
