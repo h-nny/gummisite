@@ -18,7 +18,6 @@ interface GridSize {
 }
 
 const GRID_DEFAULT: GridSize = { rows: 5, cols: 5 }
-const MISS_CHANCE = 0.2
 const EXCLAMATION_DELAY = 400
 const BASE_LOCATIONS: Location[] = (Array.isArray(locationsData) ? locationsData : []).map((location) => ({
   ...location,
@@ -34,6 +33,7 @@ function App() {
   const [lastEncounter, setLastEncounter] = useState<(EncounterResult & { locationName?: string }) | null>(null)
   const [sidePanelOpen, setSidePanelOpen] = useState(false)
   const [shinyChance, setShinyChance] = useState(2)
+  const [encounterChance, setEncounterChance] = useState(50)
   const [showWorldModal, setShowWorldModal] = useState(false)
   const [showLocationModal, setShowLocationModal] = useState(false)
   const [editingLocation, setEditingLocation] = useState<Location | null>(null)
@@ -57,7 +57,8 @@ function App() {
   const handleTileEncounter = (): EncounterResult | null => {
     if (!activeLocation) return null
     const missRoll = Math.random()
-    if (missRoll < MISS_CHANCE) {
+    const missThreshold = 1 - (encounterChance / 100)
+    if (missRoll < missThreshold) {
       const missResult: EncounterResult = { status: 'miss' }
       setLastEncounter(missResult)
       return missResult
@@ -239,6 +240,25 @@ function App() {
             />
 
             <GridControls gridSize={gridSize} onChange={setGridSize} />
+
+            <div className="rounded-[32px] border border-emerald-100 bg-white/90 p-5">
+              <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-500">Encounter Chance</p>
+              <div className="space-y-2">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value={encounterChance}
+                  onChange={(e) => setEncounterChance(Number(e.target.value))}
+                  className="w-full"
+                />
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-emerald-900">{encounterChance}%</span>
+                  <span className="text-emerald-700">{100 - encounterChance}% miss</span>
+                </div>
+              </div>
+            </div>
 
             <div className="rounded-[32px] border border-emerald-100 bg-white/90 p-5">
               <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-500">Shiny Chance</p>
