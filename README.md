@@ -1,8 +1,11 @@
-# Pokemon D&D — Grass Encounter Simulator
 
-![Product](./public/grass-tile.png)
+<h1 align="center">Pokemon D&D — Grass Encounter Simulator</h1>
 
-A small, local-first web app for simulating Pokémon-style grass encounters. Click grass tiles to roll for wild Pokémon, configure worlds and custom locations, and tune encounter and shiny chances.
+<p align="center">
+	<img src="./public/grass-tile.png" alt="Product" width="200" />
+</p>
+
+<p align="center"><em>A small, local-first web app for simulating Pokémon-style grass encounters. Click grass tiles to roll for wild Pokémon, configure worlds and custom locations, and tune encounter and shiny chances.</em></p>
 
 **Features**
 
