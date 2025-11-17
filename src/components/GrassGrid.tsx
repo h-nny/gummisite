@@ -81,14 +81,13 @@ export default function GrassGrid({ rows = 5, cols = 5, location, onEncounter }:
       >
         {Array.from({ length: totalTiles }).map((_, idx) => {
           const state = tileStates[idx]
-          const isHit = state?.status === 'hit'
           return (
             <button
               key={idx}
               type="button"
               aria-label="Search grass"
               onClick={() => handleTileClick(idx)}
-              className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl border-0 shadow-inner transition hover:-translate-y-0.5 hover:shadow-lg"
+              className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl border-0 transition hover:-translate-y-0.5"
               style={{
                 backgroundImage: `url(${GRASS_TILE_URL})`,
                 backgroundSize: 'cover',
@@ -107,9 +106,14 @@ export default function GrassGrid({ rows = 5, cols = 5, location, onEncounter }:
                 </div>
               )}
               {state?.status === 'miss' && (
-                <span className="relative z-10 text-sm font-semibold uppercase tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                  Miss!
-                </span>
+                <div className="relative z-10 animate-shake">
+                  <div className="relative rounded-full bg-white px-3 py-2 shadow-lg">
+                    <span className="text-xl font-black text-gray-800">
+                      !
+                    </span>
+                    <div className="absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-white" />
+                  </div>
+                </div>
               )}
             </button>
           )

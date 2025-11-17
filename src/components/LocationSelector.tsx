@@ -44,13 +44,12 @@ export default function LocationSelector({
         </option>
         {locations.map((location) => (
           <option key={location.id} value={location.id}>
-            {location.isCustom ? '⭐ ' : ''}
             {location.name} · {location.region}
           </option>
         ))}
       </select>
       {selectedLocation && (
-        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 px-4 py-3 text-sm text-emerald-900/80">
+        <div className="mt-4 rounded-2xl border border-emerald-100 bg-emerald-50/70 px-4 py-3 text-sm text-emerald-900/80">
           <p className="font-semibold text-emerald-900">{selectedLocation.name}</p>
           <p>{selectedLocation.description}</p>
           {selectedLocation.isCustom && (

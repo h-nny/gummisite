@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react'
-import { defaultEncounterTable, pokemonList, EncounterEntry } from '../data/pokemon'
+import { defaultEncounterTable, EncounterEntry } from '../data/pokemon'
 import { buildLocation, Location } from '../utils/locations'
 import PokemonAutocomplete from './PokemonAutocomplete'
 
@@ -60,7 +60,7 @@ export default function CustomLocationForm({ onCreate, initialLocation }: Custom
     })
     onCreate?.(location)
     if (!initialLocation) {
-      setName('Sunlit Clearing')
+      setName('Route 1')
       setRegion('Custom')
       setDescription('Another hidden patch of grass.')
       setEncounters(defaultEncounterTable)

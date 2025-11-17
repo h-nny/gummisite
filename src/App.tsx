@@ -9,7 +9,7 @@ import WorldForm from './components/WorldForm'
 import locationsData from './data/locations.json'
 import { rollEncounter, EncounterResult } from './utils/encounters'
 import useCustomLocations from './hooks/useCustomLocations'
-import useWorlds, { World } from './hooks/useWorlds'
+import useWorlds from './hooks/useWorlds'
 import { Location } from './utils/locations'
 
 interface GridSize {
@@ -20,7 +20,7 @@ interface GridSize {
 const GRID_DEFAULT: GridSize = { rows: 5, cols: 5 }
 const MISS_CHANCE = 0.2
 const EXCLAMATION_DELAY = 400
-const BASE_LOCATIONS: Location[] = (Array.isArray(locationsData) ? locationsData : []).map((location: any) => ({
+const BASE_LOCATIONS: Location[] = (Array.isArray(locationsData) ? locationsData : []).map((location) => ({
   ...location,
   isCustom: false,
 }))
@@ -139,7 +139,6 @@ function App() {
         >
           {allLocations.map((location) => (
             <option key={location.id} value={location.id}>
-              {location.isCustom ? '⭐ ' : ''}
               {location.name}
             </option>
           ))}
@@ -202,19 +201,24 @@ function App() {
                 ))}
               </select>
               {selectedWorldId && worlds.find((w) => w.id === selectedWorldId) && (
-                <div className="mt-3">
-                  <p className="text-xs text-emerald-900/70">
-                    {worlds.find((w) => w.id === selectedWorldId)?.description}
-                  </p>
-                  <button
-                    onClick={() => {
-                      removeWorld(selectedWorldId)
-                      setSelectedWorldId(null)
-                    }}
-                    className="mt-2 text-xs font-semibold uppercase tracking-wide text-rose-600 hover:text-rose-500"
-                  >
-                    Delete World
-                  </button>
+                <div className="mt-4">
+                  <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 px-4 py-3 text-sm">
+                    <p className="font-semibold text-emerald-900">
+                      {worlds.find((w) => w.id === selectedWorldId)?.name}
+                    </p>
+                    <p className="text-emerald-900/70">
+                      {worlds.find((w) => w.id === selectedWorldId)?.description}
+                    </p>
+                    <button
+                      onClick={() => {
+                        removeWorld(selectedWorldId)
+                        setSelectedWorldId(null)
+                      }}
+                      className="mt-3 text-xs font-semibold uppercase tracking-wide text-rose-600 hover:text-rose-500"
+                    >
+                      Delete World
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -365,8 +369,8 @@ function App() {
               style={{ imageRendering: 'pixelated' }}
             />
             {lastEncounter.isShiny && (
-              <span className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full bg-yellow-400 px-4 py-2 text-sm font-bold uppercase tracking-wider text-amber-900 shadow-lg">
-                ✨ Shiny!
+              <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-1xl font-black uppercase tracking-wider text-yellow-300 drop-shadow-[0_2px_8px_rgba(234,179,8,0.8)]">
+                shiny!
               </span>
             )}
             <p className="absolute -bottom-12 left-1/2 -translate-x-1/2 whitespace-nowrap text-4xl font-black text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
