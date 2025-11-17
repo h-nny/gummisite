@@ -58,7 +58,7 @@ function App() {
     if (!activeLocation) return null
     const missRoll = Math.random()
     if (missRoll < MISS_CHANCE) {
-      const missResult = { status: 'miss' }
+      const missResult: EncounterResult = { status: 'miss' }
       setLastEncounter(missResult)
       return missResult
     }
